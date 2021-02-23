@@ -1,16 +1,23 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllData } from "../redux/actions";
+import DataTable from "../components/DataTable";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const state = useSelector((state) => state);
+  const { data } = useSelector((state) => state);
+
+  console.log(data);
 
   useEffect(() => {
     dispatch(fetchAllData());
   }, [dispatch]);
 
-  return <div>x</div>;
+  return data?.transactions ? (
+    <div>
+      <DataTable data={data.transactions} />
+    </div>
+  ) : null;
 };
 
 export default Home;

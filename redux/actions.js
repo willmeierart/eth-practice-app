@@ -1,19 +1,19 @@
 import * as types from "./types";
 import api, { routes } from "../data/api";
-import { sortTransactions } from "../lib/helpers";
+import { sortTransactions, transformTransactionData } from "../lib/helpers";
 
 export const fetchAllData = (sortBy) => async (dispatch) => {
-  const allData = await routes.reduce(
-    async (acc, { name: route }) => {
+  const { prices, transactions } = await routes.reduce(
+    async (acc, { name: route, tx: isTx }) => {
       const asyncAccumulator = await acc;
       const response = await api.fetch(route);
       const json = await response.json();
-      if (route === "prices") {
-        asyncAccumulator.prices[route] = json;
-      } else {
+      if (isTx) {
         asyncAccumulator.transactions = asyncAccumulator.transactions.concat(
           json
         );
+      } else {
+        asyncAccumulator.prices = json;
       }
       return asyncAccumulator;
     },
@@ -23,12 +23,15 @@ export const fetchAllData = (sortBy) => async (dispatch) => {
     }
   );
 
-  const transactions = sortTransactions(allData.transactions);
+  const transformedTxs = transactions.map((tx) =>
+    transformTransactionData(tx, prices)
+  );
+  const sortedTxs = sortTransactions(transformedTxs);
 
-  const data = { ...allData, transactions };
+  const data = { prices, transactions: sortedTxs };
 
   dispatch({
-    payload: { data },
+    payload: data,
     type: types.FETCH_ALL,
   });
 };

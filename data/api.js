@@ -6,18 +6,22 @@ export const routes = [
   {
     endpoint: "btc-txs",
     name: "btc",
+    tx: true,
   },
   {
     endpoint: "custodial-txs",
     name: "custodial",
+    tx: true,
   },
   {
     endpoint: "eth-txs",
     name: "eth",
+    tx: true,
   },
   {
     endpoint: "prices",
     name: "prices",
+    tx: false,
   },
 ];
 
