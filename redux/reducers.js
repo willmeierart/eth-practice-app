@@ -1,6 +1,5 @@
 import { combineReducers } from "redux";
 import * as types from "./types";
-import { routes } from "../data/api";
 
 const initialDataState = {
   prices: {},

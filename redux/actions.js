@@ -1,6 +1,9 @@
+// REDUX
 import * as types from "./types";
+// INTEGRATIONS
 import api, { routes } from "../data/api";
-import { sortTransactions, transformTransactionData } from "../lib/helpers";
+// UTILS
+import { transformTransactionData } from "../lib/helpers";
 
 export const fetchAllData = (sortBy) => async (dispatch) => {
   const { prices, transactions } = await routes.reduce(
@@ -26,9 +29,8 @@ export const fetchAllData = (sortBy) => async (dispatch) => {
   const transformedTxs = transactions.map((tx) =>
     transformTransactionData(tx, prices)
   );
-  const sortedTxs = sortTransactions(transformedTxs);
 
-  const data = { prices, transactions: sortedTxs };
+  const data = { prices, transactions: transformedTxs };
 
   dispatch({
     payload: data,
