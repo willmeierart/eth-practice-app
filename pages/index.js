@@ -1,10 +1,19 @@
 // PACKAGES
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import CircularProgress from "@material-ui/core/CircularProgress";
 // REDUX
 import { fetchAllData } from "../redux/actions";
 // COMPONENTS
 import DataTable from "../components/Table/DataTable";
+
+const containerStyles = {
+  alignItems: "center",
+  display: "flex",
+  justifyContent: "center",
+  minHeight: "100vh",
+  minWidth: "100vw",
+};
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -14,11 +23,15 @@ const Home = () => {
     dispatch(fetchAllData());
   }, [dispatch]);
 
-  return data?.transactions ? (
-    <div>
-      <DataTable data={data.transactions} />
+  return (
+    <div style={containerStyles}>
+      {data?.transactions ? (
+        <DataTable data={data.transactions} />
+      ) : (
+        <CircularProgress />
+      )}
     </div>
-  ) : null;
+  );
 };
 
 export default Home;

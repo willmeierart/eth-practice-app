@@ -65,8 +65,11 @@ const DataTable = ({ data }) => {
               {stableSort(data, getCompareFunc(order, orderBy)).map(
                 (row, i) => (
                   <TableRow hover key={row.name}>
-                    {orderedColumns.map((column) => (
-                      <TableCell component="td" key={`cell-${row[column]}`}>
+                    {orderedColumns.map((column, i) => (
+                      <TableCell
+                        component="td"
+                        key={`cell-${row[column]}-${i}`} // eslint-disable-line react/no-array-index-key
+                      >
                         {row[column]}
                       </TableCell>
                     ))}
