@@ -1,6 +1,9 @@
+// PACKAGES
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+// REDUX
 import { fetchAllData } from "../redux/actions";
+// COMPONENTS
 import DataTable from "../components/Table/DataTable";
 
 const Home = () => {

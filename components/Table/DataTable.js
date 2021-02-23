@@ -1,5 +1,6 @@
 // PACKAGES
-import React, { useState } from "react";
+import React from "react";
+import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -40,14 +41,10 @@ const useStyles = makeStyles((theme) => ({
 
 const DataTable = ({ data }) => {
   const classes = useStyles();
-  const [order, setOrder] = useState("desc");
-  const [orderBy, setOrderBy] = useState("amount");
 
-  const handleSort = (event, property) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
+  const {
+    order: { order, orderBy },
+  } = useSelector((state) => state);
 
   const orderedColumns = ["currency", "amount", "time", "type", "state"];
 
@@ -61,19 +58,15 @@ const DataTable = ({ data }) => {
             aria-labelledby="tableTitle"
             className={classes.table}
             size="small"
+            stickyHeader
           >
-            <SortableTableHead
-              classes={classes}
-              onSort={handleSort}
-              order={order}
-              orderBy={orderBy}
-            />
+            <SortableTableHead classes={classes} />
             <TableBody>
               {stableSort(data, getCompareFunc(order, orderBy)).map(
                 (row, i) => (
                   <TableRow hover key={row.name}>
                     {orderedColumns.map((column) => (
-                      <TableCell component="td" key={`cell-${column}`}>
+                      <TableCell component="td" key={`cell-${row[column]}`}>
                         {row[column]}
                       </TableCell>
                     ))}

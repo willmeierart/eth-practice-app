@@ -15,8 +15,23 @@ const dataReducer = (state = {}, action) => {
   }
 };
 
+const initialOrderState = {
+  order: "desc",
+  orderBy: "amount",
+};
+
+const orderReducer = (state = initialOrderState, action) => {
+  switch (action.type) {
+    case types.REORDER:
+      return { ...initialDataState, ...action.payload };
+    default:
+      return state;
+  }
+};
+
 const reducers = {
   data: dataReducer,
+  order: orderReducer,
 };
 
 export default combineReducers(reducers);
