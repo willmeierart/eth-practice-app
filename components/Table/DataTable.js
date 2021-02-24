@@ -70,11 +70,7 @@ const DataTable = ({ data }) => {
             stickyHeader
           >
             <SortableTableHead classes={classes} />
-            {loading ? (
-              <div className="loading-wrapper">
-                <CircularProgress />
-              </div>
-            ) : (
+            {!loading && (
               <TableBody>
                 {stableSort(data, getCompareFunc(order, orderBy)).map(
                   (row, i) => (
@@ -105,6 +101,11 @@ const DataTable = ({ data }) => {
             )}
           </Table>
         </TableContainer>
+        {loading && (
+          <div className="loading-wrapper">
+            <CircularProgress />
+          </div>
+        )}
       </Paper>
       <style jsx>
         {`
