@@ -10,11 +10,14 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import { reorderData } from "../../redux/actions";
 
 const headCells = [
-  { align: "right", disablePadding: false, id: "currency", label: "Currency" },
-  { align: "left", disablePadding: false, id: "amount", label: "Amount" },
-  { disablePadding: false, id: "time", label: "Time" },
-  { disablePadding: false, id: "type", label: "Type" },
-  { disablePadding: false, id: "state", label: "State" },
+  { id: "currency", label: "Currency" },
+  { id: "amountFiat", label: "Amount (Fiat)" },
+  { id: "amountCrypto", label: "Amount (Crypto)" },
+  { id: "time", label: "Time" },
+  { id: "type", label: "Type" },
+  { id: "state", label: "State" },
+  { id: "to", label: "To" },
+  { id: "from", label: "From" },
 ];
 
 const SortableTableHead = ({ classes }) => {
@@ -38,9 +41,9 @@ const SortableTableHead = ({ classes }) => {
       <TableRow>
         {headCells.map((hc) => (
           <TableCell
-            align={hc.align || "center"}
+            align="left"
             key={`th-${hc.id}`}
-            padding={hc.disablePadding ? "none" : "default"}
+            padding="default"
             sortDirection={isOrderer(hc.id) ? order : false}
           >
             <TableSortLabel

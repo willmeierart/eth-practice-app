@@ -9,6 +9,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableRow from "@material-ui/core/TableRow";
+import Tooltip from "@material-ui/core/Tooltip";
 // COMPONENTS
 import SortableTableHead from "./SortableTableHead";
 import TableToolbar from "./TableToolbar";
@@ -46,7 +47,28 @@ const DataTable = ({ data }) => {
     order: { order, orderBy },
   } = useSelector((state) => state);
 
-  const orderedColumns = ["currency", "amount", "time", "type", "state"];
+  const orderedColumns = [
+    "currency",
+    "amountFiat",
+    "amountCrypto",
+    "time",
+    "type",
+    "state",
+    "to",
+    "from",
+  ];
+
+  const getDisplayValue = (value, column) => {
+    if (column === "time") {
+      return value.split("T")[0];
+    }
+    if (typeof value === "number") {
+      return value.toLocaleString(undefined, { maximumFractionDigits: 8 });
+    }
+    if (typeof value === "string" && value.length > 13) {
+      return `${value.substring(0, 10)}...`;
+    }
+  };
 
   return (
     <div className={classes.root}>
@@ -64,15 +86,25 @@ const DataTable = ({ data }) => {
             <TableBody>
               {stableSort(data, getCompareFunc(order, orderBy)).map(
                 (row, i) => (
-                  <TableRow hover key={row.name}>
-                    {orderedColumns.map((column, i) => (
-                      <TableCell
-                        component="td"
-                        key={`cell-${row[column]}-${i}`} // eslint-disable-line react/no-array-index-key
-                      >
-                        {row[column]}
-                      </TableCell>
-                    ))}
+                  <TableRow
+                    hover
+                    key={`row-${i}`} // eslint-disable-line react/no-array-index-key
+                  >
+                    {orderedColumns.map((column, j) => {
+                      const value = row[column];
+                      const display = getDisplayValue(value, column);
+                      const showTooltip = display && !column.includes("amount");
+                      return (
+                        <Tooltip
+                          key={`cell-${value}-${j}`} // eslint-disable-line react/no-array-index-key
+                          title={showTooltip ? value : ""}
+                        >
+                          <TableCell component="td">
+                            {display || value}
+                          </TableCell>
+                        </Tooltip>
+                      );
+                    })}
                   </TableRow>
                 )
               )}
@@ -84,8 +116,8 @@ const DataTable = ({ data }) => {
   );
 };
 
-export default DataTable;
-
 DataTable.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object),
 };
+
+export default DataTable;

@@ -17,7 +17,7 @@ const dataReducer = (state = {}, action) => {
 
 const initialOrderState = {
   order: "desc",
-  orderBy: "amount",
+  orderBy: "time",
 };
 
 const orderReducer = (state = initialOrderState, action) => {
