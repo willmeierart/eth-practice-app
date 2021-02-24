@@ -12,9 +12,9 @@
   "private": true,
   "description": "Take home interview project server.",
   "scripts": {
-    "serve": "nodemon server/index.js",
     "dev": "concurrently \"yarn serve\" \"yarn next\"",
-    "lint": "eslint '*/**.js' --max-warnings=0"
+    "lint": "eslint '*/**.js' --max-warnings=0",
+    "serve": "nodemon server/index.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.17",

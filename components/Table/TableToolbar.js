@@ -19,14 +19,7 @@ import { makeStyles } from "@material-ui/core/styles";
 // REDUX
 import { filterTransactions, searchTransactions } from "../../redux/actions";
 // CONSTANTS
-import {
-  BTC,
-  DEST_OPTIONS,
-  ETH,
-  STATE_OPTIONS,
-  TYPE_OPTIONS,
-  USD,
-} from "../../lib/constants";
+import { FILTERS } from "../../lib/constants";
 
 const useToolbarStyles = makeStyles((theme) => ({
   drawer: {
@@ -41,16 +34,10 @@ const useToolbarStyles = makeStyles((theme) => ({
   },
 }));
 
-const filters = [
-  { display: "Currency", id: "currency", options: [BTC, ETH, USD] },
-  { display: "Type", id: "type", options: TYPE_OPTIONS },
-  { display: "State", id: "state", options: STATE_OPTIONS },
-  { display: "To", id: "to", options: DEST_OPTIONS },
-  { display: "From", id: "from", options: DEST_OPTIONS },
-];
-
 /**
+ * @Component
  * The Header component that contains the searchbar and filter drawer toggle
+ *
  */
 const TableToolbar = () => {
   const classes = useToolbarStyles();
@@ -104,7 +91,7 @@ const TableToolbar = () => {
               <ListItemText>Filter</ListItemText>
             </ListItem>
             <Divider />
-            {filters.map((filter) => {
+            {FILTERS.map((filter) => {
               const val = filter.options.find(
                 (option) => option === activeFilters[filter.id]
               );

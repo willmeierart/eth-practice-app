@@ -12,7 +12,12 @@ import {
   transformTransactionData,
 } from "../lib/helpers";
 
-// Imperatively set loading state
+/**
+ * @function
+ * Imperatively dispatches loading action
+ * @param {bool} loadingState
+ *
+ */
 export const setLoading = (loadingState = true) => (dispatch) => {
   dispatch({
     payload: loadingState,
@@ -20,8 +25,12 @@ export const setLoading = (loadingState = true) => (dispatch) => {
   });
 };
 
-// Fetch all data, fired on app load
-export const fetchAllData = (sortBy) => async (dispatch) => {
+/**
+ * @function
+ * Fetches all data, fired on app load
+ *
+ */
+export const fetchAllData = () => async (dispatch) => {
   const { prices, transactions } = await routes.reduce(
     async (acc, { name: route, tx: isTx }) => {
       const asyncAccumulator = await acc;
@@ -52,20 +61,24 @@ export const fetchAllData = (sortBy) => async (dispatch) => {
     transformTransactionData(tx, prices)
   );
 
-  const data = {
-    filteredTransactions: transformedTxs,
-    loading: false,
-    prices,
-    transactions: transformedTxs,
-  };
-
   dispatch({
-    payload: data,
+    payload: {
+      filteredTransactions: transformedTxs,
+      loading: false,
+      prices,
+      transactions: transformedTxs,
+    },
     type: types.FETCH_ALL,
   });
 };
 
-// Reorder data via table column headers
+/**
+ * @function
+ * Reorder transactions via table column headers
+ * @param {string} order either 'asc' or 'desc'
+ * @param {string} orderBy the name of the property to apply order param to
+ *
+ */
 export const reorderData = (order, orderBy) => (dispatch) => {
   dispatch({
     payload: { order, orderBy },
@@ -73,7 +86,13 @@ export const reorderData = (order, orderBy) => (dispatch) => {
   });
 };
 
-// Search for text matches within any field of each of the individual transactions
+/**
+ * @function
+ * Search for text matches within any field of each of the individual transactions
+ * @param {string} searchPhrase the string to search for matches against
+ * @param {array} txs the list of transactions to search against
+ *
+ */
 export const searchTransactions = (searchPhrase, txs) => (dispatch) => {
   // Immediately set loading state and update value of textbox...
   dispatch({
@@ -81,9 +100,7 @@ export const searchTransactions = (searchPhrase, txs) => (dispatch) => {
     type: types.SEARCH,
   });
 
-  // ...but debounce the actual searching a bit
-  const searchRate = 500;
-
+  // ...but debounce the actual searching a bit since `doSearch` is a heavy func
   const debounceableSearch = () => {
     const filteredTransactions = doSearch(searchPhrase, txs);
     dispatch({
@@ -92,20 +109,28 @@ export const searchTransactions = (searchPhrase, txs) => (dispatch) => {
     });
   };
 
-  debounce(debounceableSearch, searchRate)();
+  debounce(debounceableSearch, 500)();
 };
 
-export const filterTransactions = (filter, filters, txs) => (dispatch) => {
+/**
+ * @function
+ * Filter for individual transaction matches for certain options of select fields
+ * @param {object} filter formatted as `{FIELD: VALUE}`
+ * @param {object} filters prev state of `activeFilters`. Necessary here for `doFilter`
+ * @param {array} txs the list of transactions to filter against
+ *
+ */
+export const filterTransactions = (filter, prevFilters, txs) => (dispatch) => {
   // Immediately set loading state while subsequent logic runs
-  // Loading state set back to false in reducer after search logic in this case
+  // Note that loading state set back to false in reducer after search logic in this case
   dispatch({
     payload: true,
     type: types.SET_LOADING,
   });
 
-  const newFilters = { ...filters, ...filter };
+  const newFilters = { ...prevFilters, ...filter };
 
-  const filteredTransactions = doFilter(newFilters, filter, txs);
+  const filteredTransactions = doFilter(newFilters, txs);
 
   dispatch({
     payload: { activeFilters: newFilters, filteredTransactions },

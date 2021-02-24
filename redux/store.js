@@ -1,8 +1,14 @@
+// PACKAGES
 import { useMemo } from "react";
 import { createStore, applyMiddleware } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import thunkMiddleware from "redux-thunk";
+// REDUX
 import reducers from "./reducers";
+
+/**
+ * Pure redux boilerplate
+ */
 
 let store;
 

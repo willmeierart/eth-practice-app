@@ -1,7 +1,7 @@
 // PACKAGES
 import fetch from "isomorphic-unfetch";
-
-const BASE_URL = "http://localhost:8888/";
+// CONSTANTS
+import { BASE_URL } from "../lib/constants";
 
 export const routes = [
   {
@@ -22,16 +22,29 @@ export const routes = [
   {
     endpoint: "prices",
     name: "prices",
+    // used in `fetchAllData` action to treat this route differently
     tx: false,
   },
 ];
 
+/**
+ * @function
+ * Constructs path for api query
+ * @param {object} route one of the above routes
+ *
+ */
 const compileFullPath = (route) => {
   const { endpoint } = routes.find((r) => r.name === route);
   return endpoint ? `${BASE_URL}${endpoint}` : null;
 };
 
 const api = {
+  /**
+   * @function
+   * Fetches data from mock api
+   * @param {object} route one of the above routes
+   *
+   */
   fetch: async (route) => {
     const path = compileFullPath(route);
 

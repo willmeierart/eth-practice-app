@@ -8,18 +8,15 @@ import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 // REDUX
 import { reorderData } from "../../redux/actions";
+// CONSTANTS
+import { HEAD_CELLS } from "../../lib/constants";
 
-const headCells = [
-  { id: "currency", label: "Currency" },
-  { id: "amountFiat", label: "Amount (Fiat)" },
-  { id: "amountCrypto", label: "Amount (Crypto)" },
-  { id: "time", label: "Time" },
-  { id: "type", label: "Type" },
-  { id: "state", label: "State" },
-  { id: "to", label: "To" },
-  { id: "from", label: "From" },
-];
-
+/**
+ * @Component
+ * The <th /> of the `DataTable` that allows for custom sorting (via Material UI)
+ * @param {object: { object }} classes Material UI css classes passed from parent
+ *
+ */
 const SortableTableHead = ({ classes }) => {
   const dispatch = useDispatch();
   const {
@@ -32,14 +29,14 @@ const SortableTableHead = ({ classes }) => {
     dispatch(reorderData(newOrder, property));
   };
 
-  const curriedHandler = (prop) => (e) => handleSort(prop);
+  const onSort = (prop) => (e) => handleSort(prop);
 
   const isOrderer = (id) => orderBy === id;
 
   return (
     <TableHead>
       <TableRow>
-        {headCells.map((hc) => (
+        {HEAD_CELLS.map((hc) => (
           <TableCell
             align="left"
             key={`th-${hc.id}`}
@@ -49,7 +46,7 @@ const SortableTableHead = ({ classes }) => {
             <TableSortLabel
               active={isOrderer(hc.id)}
               direction={isOrderer(hc.id) ? order : "asc"}
-              onClick={curriedHandler(hc.id)}
+              onClick={onSort(hc.id)}
             >
               {hc.label}
             </TableSortLabel>

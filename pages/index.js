@@ -6,6 +6,11 @@ import { fetchAllData } from "../redux/actions";
 // COMPONENTS
 import DataTable from "../components/Table/DataTable";
 
+/**
+ * @Component
+ * The homepage wrapper
+ *
+ */
 const Home = () => {
   const dispatch = useDispatch();
   const {

@@ -15,7 +15,9 @@ import Tooltip from "@material-ui/core/Tooltip";
 import SortableTableHead from "./SortableTableHead";
 import TableToolbar from "./TableToolbar";
 // UTILS
-import { getCompareFunc, stableSort } from "../../lib/helpers";
+import { getCompareFunc, getDisplayValue, stableSort } from "../../lib/helpers";
+// CONSTANTS
+import { ORDERED_COLUMNS } from "../../lib/constants";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -41,6 +43,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * @Component
+ * Main display table for transaction data
+ * @param {object: {array}} data array of transaction data objects
+ *
+ */
 const DataTable = ({ data }) => {
   const classes = useStyles();
 
@@ -48,29 +56,6 @@ const DataTable = ({ data }) => {
     data: { loading },
     order: { order, orderBy },
   } = useSelector((state) => state);
-
-  const orderedColumns = [
-    "currency",
-    "amountFiat",
-    "amountCrypto",
-    "time",
-    "type",
-    "state",
-    "to",
-    "from",
-  ];
-
-  const getDisplayValue = (value, column) => {
-    if (column === "time") {
-      return value.split("T")[0];
-    }
-    if (typeof value === "number") {
-      return value.toLocaleString(undefined, { maximumFractionDigits: 8 });
-    }
-    if (typeof value === "string" && value.length > 13) {
-      return `${value.substring(0, 10)}...`;
-    }
-  };
 
   return (
     <div className={classes.root}>
@@ -97,7 +82,7 @@ const DataTable = ({ data }) => {
                       hover
                       key={`row-${i}`} // eslint-disable-line react/no-array-index-key
                     >
-                      {orderedColumns.map((column, j) => {
+                      {ORDERED_COLUMNS.map((column, j) => {
                         const value = row[column];
                         const display = getDisplayValue(value, column);
                         const showTooltip =

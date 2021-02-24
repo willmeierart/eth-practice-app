@@ -4,19 +4,22 @@ import * as types from "./types";
 // UTILS
 import { doFilter, doSearch } from "../lib/helpers";
 
-const initialFilterState = {
+const initialDataState = {
   activeFilters: {},
   filteredTransactions: [],
-  searchPhrase: "",
-};
-
-const initialDataState = {
-  ...initialFilterState,
   loading: true,
   prices: {},
+  searchPhrase: "",
   transactions: [],
 };
 
+/**
+ * @function
+ * Reducer for fetching, filtering, searching data
+ * @param {object} state either initial or previous
+ * @param {any} action redux action to process payload
+ *
+ */
 const dataReducer = (state = initialDataState, action) => {
   switch (action.type) {
     case types.FETCH_ALL:
@@ -55,11 +58,11 @@ const dataReducer = (state = initialDataState, action) => {
           ...action.payload,
           filteredTransactions: doFilter(
             state.activeFilters,
-            {},
             action.payload.filteredTransactions
           ),
         };
       }
+      // Note that loading is handled conditionally in the action
       return { ...state, ...action.payload };
     case types.SET_LOADING:
       return { ...state, loading: action.payload };
@@ -73,6 +76,13 @@ const initialOrderState = {
   orderBy: "time",
 };
 
+/**
+ * @function
+ * Reducer for ordering transactions by specific properties
+ * @param {object} state either initial or previous
+ * @param {any} action redux action to process payload
+ *
+ */
 const orderReducer = (state = initialOrderState, action) => {
   switch (action.type) {
     case types.REORDER:
