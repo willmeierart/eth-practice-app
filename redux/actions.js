@@ -3,7 +3,7 @@ import * as types from "./types";
 // INTEGRATIONS
 import api, { routes } from "../data/api";
 // UTILS
-import { transformTransactionData } from "../lib/helpers";
+import { makeSearchable, transformTransactionData } from "../lib/helpers";
 
 // Fetch all data, fired on app load
 export const fetchAllData = (sortBy) => async (dispatch) => {
@@ -12,13 +12,19 @@ export const fetchAllData = (sortBy) => async (dispatch) => {
       const asyncAccumulator = await acc;
       const response = await api.fetch(route);
       const json = await response.json();
+
+      const searchableJson = Array.isArray(json)
+        ? json.map(makeSearchable)
+        : makeSearchable(json);
+
       if (isTx) {
         asyncAccumulator.transactions = asyncAccumulator.transactions.concat(
-          json
+          searchableJson
         );
       } else {
-        asyncAccumulator.prices = json;
+        asyncAccumulator.prices = searchableJson;
       }
+
       return asyncAccumulator;
     },
     {
@@ -31,7 +37,12 @@ export const fetchAllData = (sortBy) => async (dispatch) => {
     transformTransactionData(tx, prices)
   );
 
-  const data = { prices, transactions: transformedTxs };
+  const data = {
+    filteredTransactions: transformedTxs,
+    loading: false,
+    prices,
+    transactions: transformedTxs,
+  };
 
   dispatch({
     payload: data,
@@ -44,5 +55,16 @@ export const reorderData = (order, orderBy) => (dispatch) => {
   dispatch({
     payload: { order, orderBy },
     type: types.REORDER,
+  });
+};
+
+// Search for text matches within any field of each of the individual transactions
+export const searchTransactions = (searchPhrase, txs) => (dispatch) => {
+  const filteredTransactions = txs.filter((tx) =>
+    tx.searchable.toLowerCase().includes(searchPhrase.toLowerCase())
+  );
+  dispatch({
+    payload: { filteredTransactions, searchPhrase },
+    type: types.SEARCH,
   });
 };

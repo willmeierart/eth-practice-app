@@ -1,15 +1,26 @@
 import { combineReducers } from "redux";
 import * as types from "./types";
 
-const initialDataState = {
-  prices: {},
-  transactions: {},
+const initialFilterState = {
+  filteredTransactions: [],
+  filters: {},
+  searchPhrase: "",
 };
 
-const dataReducer = (state = {}, action) => {
+const initialDataState = {
+  ...initialFilterState,
+  loading: true,
+  prices: {},
+  transactions: [],
+};
+
+const dataReducer = (state = initialDataState, action) => {
+  // console.log(action);
   switch (action.type) {
     case types.FETCH_ALL:
-      return { ...initialDataState, ...action.payload };
+      return { ...state, ...action.payload };
+    case types.SEARCH:
+      return { ...state, ...action.payload };
     default:
       return state;
   }
@@ -23,7 +34,7 @@ const initialOrderState = {
 const orderReducer = (state = initialOrderState, action) => {
   switch (action.type) {
     case types.REORDER:
-      return { ...initialDataState, ...action.payload };
+      return { ...state, ...action.payload };
     default:
       return state;
   }
