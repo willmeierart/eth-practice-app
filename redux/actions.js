@@ -5,7 +5,12 @@ import * as types from "./types";
 // INTEGRATIONS
 import api, { routes } from "../data/api";
 // UTILS
-import { makeSearchable, transformTransactionData } from "../lib/helpers";
+import {
+  doFilter,
+  doSearch,
+  makeSearchable,
+  transformTransactionData,
+} from "../lib/helpers";
 
 // Imperatively set loading state
 export const setLoading = (loadingState = true) => (dispatch) => {
@@ -70,19 +75,40 @@ export const reorderData = (order, orderBy) => (dispatch) => {
 
 // Search for text matches within any field of each of the individual transactions
 export const searchTransactions = (searchPhrase, txs) => (dispatch) => {
+  // Immediately set loading state and update value of textbox...
   dispatch({
-    payload: { loading: true, searchPhrase },
+    payload: { filteredTransactions: txs, loading: true, searchPhrase },
     type: types.SEARCH,
   });
-  const performSearch = () => {
-    const filteredTransactions = txs.filter((tx) =>
-      tx.searchable.toLowerCase().includes(searchPhrase.toLowerCase())
-    );
+
+  // ...but debounce the actual searching a bit
+  const searchRate = 500;
+
+  const debounceableSearch = () => {
+    const filteredTransactions = doSearch(searchPhrase, txs);
     dispatch({
-      payload: { filteredTransactions, loading: false },
+      payload: { filteredTransactions, loading: false, searchPhrase },
       type: types.SEARCH,
     });
   };
-  const debouncedSearch = debounce(performSearch, 500);
-  debouncedSearch();
+
+  debounce(debounceableSearch, searchRate)();
+};
+
+export const filterTransactions = (filter, filters, txs) => (dispatch) => {
+  // Immediately set loading state while subsequent logic runs
+  // Loading state set back to false in reducer after search logic in this case
+  dispatch({
+    payload: true,
+    type: types.SET_LOADING,
+  });
+
+  const newFilters = { ...filters, ...filter };
+
+  const filteredTransactions = doFilter(newFilters, filter, txs);
+
+  dispatch({
+    payload: { activeFilters: newFilters, filteredTransactions },
+    type: types.FILTER,
+  });
 };
