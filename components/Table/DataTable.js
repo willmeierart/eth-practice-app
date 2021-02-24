@@ -3,6 +3,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -44,6 +45,7 @@ const DataTable = ({ data }) => {
   const classes = useStyles();
 
   const {
+    data: { loading },
     order: { order, orderBy },
   } = useSelector((state) => state);
 
@@ -83,35 +85,52 @@ const DataTable = ({ data }) => {
             stickyHeader
           >
             <SortableTableHead classes={classes} />
-            <TableBody>
-              {stableSort(data, getCompareFunc(order, orderBy)).map(
-                (row, i) => (
-                  <TableRow
-                    hover
-                    key={`row-${i}`} // eslint-disable-line react/no-array-index-key
-                  >
-                    {orderedColumns.map((column, j) => {
-                      const value = row[column];
-                      const display = getDisplayValue(value, column);
-                      const showTooltip = display && !column.includes("amount");
-                      return (
-                        <Tooltip
-                          key={`cell-${value}-${j}`} // eslint-disable-line react/no-array-index-key
-                          title={showTooltip ? value : ""}
-                        >
-                          <TableCell component="td">
-                            {display || value}
-                          </TableCell>
-                        </Tooltip>
-                      );
-                    })}
-                  </TableRow>
-                )
-              )}
-            </TableBody>
+            {loading ? (
+              <div className="loading-wrapper">
+                <CircularProgress />
+              </div>
+            ) : (
+              <TableBody>
+                {stableSort(data, getCompareFunc(order, orderBy)).map(
+                  (row, i) => (
+                    <TableRow
+                      hover
+                      key={`row-${i}`} // eslint-disable-line react/no-array-index-key
+                    >
+                      {orderedColumns.map((column, j) => {
+                        const value = row[column];
+                        const display = getDisplayValue(value, column);
+                        const showTooltip =
+                          display && !column.includes("amount");
+                        return (
+                          <Tooltip
+                            key={`cell-${value}-${j}`} // eslint-disable-line react/no-array-index-key
+                            title={showTooltip ? value : ""}
+                          >
+                            <TableCell component="td">
+                              {display || value}
+                            </TableCell>
+                          </Tooltip>
+                        );
+                      })}
+                    </TableRow>
+                  )
+                )}
+              </TableBody>
+            )}
           </Table>
         </TableContainer>
       </Paper>
+      <style jsx>
+        {`
+          .loading-wrapper {
+            display: flex;
+            justify-content: center;
+            position: absolute;
+            width: 100%;
+          }
+        `}
+      </style>
     </div>
   );
 };

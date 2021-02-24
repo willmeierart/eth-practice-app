@@ -45,6 +45,7 @@ const TableToolbar = () => {
         Transactions
       </Typography>
       <TextField
+        fullWidth
         id="searchbar"
         label="Search"
         onChange={handleSearch}

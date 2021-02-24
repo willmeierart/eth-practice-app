@@ -21,6 +21,8 @@ const dataReducer = (state = initialDataState, action) => {
       return { ...state, ...action.payload };
     case types.SEARCH:
       return { ...state, ...action.payload };
+    case types.SET_LOADING:
+      return { ...state, loading: action.payload };
     default:
       return state;
   }

@@ -52,11 +52,6 @@ const SortableTableHead = ({ classes }) => {
               onClick={curriedHandler(hc.id)}
             >
               {hc.label}
-              {isOrderer(hc.id) ? (
-                <span className={classes.visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </span>
-              ) : null}
             </TableSortLabel>
           </TableCell>
         ))}

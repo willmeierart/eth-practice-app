@@ -1,9 +1,19 @@
+// PACKAGES
+import debounce from "lodash.debounce";
 // REDUX
 import * as types from "./types";
 // INTEGRATIONS
 import api, { routes } from "../data/api";
 // UTILS
 import { makeSearchable, transformTransactionData } from "../lib/helpers";
+
+// Imperatively set loading state
+export const setLoading = (loadingState = true) => (dispatch) => {
+  dispatch({
+    payload: loadingState,
+    type: types.SET_LOADING,
+  });
+};
 
 // Fetch all data, fired on app load
 export const fetchAllData = (sortBy) => async (dispatch) => {
@@ -60,11 +70,19 @@ export const reorderData = (order, orderBy) => (dispatch) => {
 
 // Search for text matches within any field of each of the individual transactions
 export const searchTransactions = (searchPhrase, txs) => (dispatch) => {
-  const filteredTransactions = txs.filter((tx) =>
-    tx.searchable.toLowerCase().includes(searchPhrase.toLowerCase())
-  );
   dispatch({
-    payload: { filteredTransactions, searchPhrase },
+    payload: { loading: true, searchPhrase },
     type: types.SEARCH,
   });
+  const performSearch = () => {
+    const filteredTransactions = txs.filter((tx) =>
+      tx.searchable.toLowerCase().includes(searchPhrase.toLowerCase())
+    );
+    dispatch({
+      payload: { filteredTransactions, loading: false },
+      type: types.SEARCH,
+    });
+  };
+  const debouncedSearch = debounce(performSearch, 500);
+  debouncedSearch();
 };

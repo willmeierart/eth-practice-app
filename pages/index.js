@@ -1,7 +1,6 @@
 // PACKAGES
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import CircularProgress from "@material-ui/core/CircularProgress";
 // REDUX
 import { fetchAllData } from "../redux/actions";
 // COMPONENTS
@@ -18,7 +17,6 @@ const Home = () => {
   }, [dispatch]);
 
   const containerStyles = {
-    alignItems: loading ? "center" : "flex-start",
     display: "flex",
     justifyContent: "center",
     minHeight: "100vh",
@@ -27,11 +25,7 @@ const Home = () => {
 
   return (
     <div style={containerStyles}>
-      {loading ? (
-        <CircularProgress />
-      ) : (
-        <DataTable data={filteredTransactions} loading={loading} />
-      )}
+      <DataTable data={filteredTransactions} loading={loading} />
     </div>
   );
 };
