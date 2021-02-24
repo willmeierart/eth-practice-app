@@ -110,10 +110,12 @@ const DataTable = ({ data }) => {
       <style jsx>
         {`
           .loading-wrapper {
+            align-items: center;
             display: flex;
             justify-content: center;
+            min-height: 60vh;
             position: absolute;
-            width: 100%;
+            min-width: 100vw;
           }
         `}
       </style>

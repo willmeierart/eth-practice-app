@@ -21,15 +21,8 @@ const Home = () => {
     dispatch(fetchAllData());
   }, [dispatch]);
 
-  const containerStyles = {
-    display: "flex",
-    justifyContent: "center",
-    minHeight: "100vh",
-    minWidth: "100vw",
-  };
-
   return (
-    <div style={containerStyles}>
+    <div>
       <DataTable data={filteredTransactions} loading={loading} />
     </div>
   );
