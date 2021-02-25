@@ -31,7 +31,6 @@ const dataReducer = (state = initialDataState, action) => {
         return {
           ...state,
           activeFilters: {
-            ...state.activeFilters,
             ...action.payload.activeFilters,
           },
           filteredTransactions: doSearch(
@@ -45,7 +44,6 @@ const dataReducer = (state = initialDataState, action) => {
         ...state,
         ...action.payload,
         activeFilters: {
-          ...state.activeFilters,
           ...action.payload.activeFilters,
         },
         loading: false,

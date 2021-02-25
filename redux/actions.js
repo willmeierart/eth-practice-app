@@ -130,6 +130,12 @@ export const filterTransactions = (filter, prevFilters, txs) => (dispatch) => {
 
   const newFilters = { ...prevFilters, ...filter };
 
+  // Clear filter if value reset to placeholder value
+  const [fKey, fVal] = Object.entries(filter)[0];
+  if (fKey?.toLowerCase() === fVal?.toLowerCase()) {
+    delete newFilters[fKey];
+  }
+
   const filteredTransactions = doFilter(newFilters, txs);
 
   dispatch({

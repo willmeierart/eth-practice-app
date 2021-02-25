@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import clsx from "clsx";
+import DeleteIcon from "@material-ui/icons/Delete";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import SearchIcon from "@material-ui/icons/Search";
 import Divider from "@material-ui/core/Divider";
@@ -43,10 +44,12 @@ const useToolbarStyles = makeStyles((theme) => ({
  */
 const TableToolbar = () => {
   const classes = useToolbarStyles();
+
   const dispatch = useDispatch();
   const {
     data: { activeFilters, searchPhrase, transactions },
   } = useSelector((state) => state);
+
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleFilter = (filterKey) => ({ target: { value } }) => {
@@ -81,7 +84,6 @@ const TableToolbar = () => {
             </InputAdornment>
           ),
         }}
-        fullWidth
         id="searchbar"
         onChange={handleSearch}
         value={searchPhrase}
@@ -111,8 +113,12 @@ const TableToolbar = () => {
                     placeholder={filter.display}
                     renderValue={(value) => value || filter.display}
                     value={val}
-                    variant="outlined"
                   >
+                    <MenuItem key="delete-option" value={filter.display}>
+                      <IconButton>
+                        <DeleteIcon />
+                      </IconButton>
+                    </MenuItem>
                     {filter.options.map((option) => (
                       <MenuItem key={`${filter.id}-${option}`} value={option}>
                         {option}
