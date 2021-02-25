@@ -112,7 +112,7 @@ const TableToolbar = () => {
                     onChange={handleFilter(filter.id)}
                     placeholder={filter.display}
                     renderValue={(value) => value || filter.display}
-                    value={val}
+                    value={val || filter.display}
                   >
                     <MenuItem key="delete-option" value={filter.display}>
                       <IconButton>
