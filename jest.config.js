@@ -5,7 +5,7 @@ const coverageEnabled = process.argv.indexOf("--coverage") !== -1;
 module.exports = {
   clearMocks: true,
   collectCoverage: coverageEnabled,
-  collectCoverageFrom: ["components", "data", "lib", "redux/actions.js"],
+  collectCoverageFrom: ["components", "data", "lib", "redux"],
   coverageDirectory: "./coverage",
   coverageReporters: ["json-summary", "text-lcov", "lcov"],
   coverageThreshold: {

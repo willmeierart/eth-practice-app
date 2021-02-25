@@ -159,7 +159,6 @@ describe("reorderData", () => {
         payload: {
           filteredTransactions: mockTransformedTxs,
           loading: false,
-          searchPhrase: "test",
         },
 
         type: types.SEARCH,

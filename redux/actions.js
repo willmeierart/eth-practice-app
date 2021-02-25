@@ -5,12 +5,7 @@ import * as types from "./types";
 // INTEGRATIONS
 import api, { routes } from "../data/api";
 // UTILS
-import {
-  doFilter,
-  doSearch,
-  makeSearchable,
-  transformTransactionData,
-} from "../lib/helpers";
+import { doFilter, doSearch, transformTransactionData } from "../lib/helpers";
 
 /**
  * @function
@@ -37,16 +32,12 @@ export const fetchAllData = () => async (dispatch) => {
       const response = await api.fetch(route);
       const json = await response.json();
 
-      const searchableJson = Array.isArray(json)
-        ? json.map(makeSearchable)
-        : makeSearchable(json);
-
       if (isTx) {
         asyncAccumulator.transactions = asyncAccumulator.transactions.concat(
-          searchableJson
+          json
         );
       } else {
-        asyncAccumulator.prices = searchableJson;
+        asyncAccumulator.prices = json;
       }
 
       return asyncAccumulator;
@@ -104,12 +95,12 @@ export const searchTransactions = (searchPhrase, txs) => (dispatch) => {
   const debounceableSearch = () => {
     const filteredTransactions = doSearch(searchPhrase, txs);
     dispatch({
-      payload: { filteredTransactions, loading: false, searchPhrase },
+      payload: { filteredTransactions, loading: false },
       type: types.SEARCH,
     });
   };
 
-  debounce(debounceableSearch, 500)();
+  debounce(debounceableSearch, 300)();
 };
 
 /**
