@@ -12,9 +12,11 @@
   "private": true,
   "description": "Take home interview project server.",
   "scripts": {
+    "build": "next build",
     "dev": "concurrently \"yarn serve\" \"yarn next\"",
     "lint": "eslint '*/**.js' --max-warnings=0",
     "serve": "nodemon server/index.js",
+    "start": "concurrently \"yarn serve\" \"yarn start\"",
     "test": "jest --notify --watch",
     "test:coverage": "jest --coverage"
   },
