@@ -1,6 +1,6 @@
 // PACKAGES
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 // REDUX
 import { fetchAllData } from "../redux/actions";
 // COMPONENTS
@@ -13,9 +13,6 @@ import DataTable from "../components/Table/DataTable";
  */
 const Home = () => {
   const dispatch = useDispatch();
-  const {
-    data: { filteredTransactions, loading },
-  } = useSelector((state) => state);
 
   useEffect(() => {
     dispatch(fetchAllData());
@@ -23,7 +20,7 @@ const Home = () => {
 
   return (
     <div>
-      <DataTable data={filteredTransactions} loading={loading} />
+      <DataTable />
     </div>
   );
 };

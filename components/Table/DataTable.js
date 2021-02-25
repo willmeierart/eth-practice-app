@@ -1,7 +1,6 @@
 // PACKAGES
 import React from "react";
 import { useSelector } from "react-redux";
-import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Paper from "@material-ui/core/Paper";
@@ -19,7 +18,7 @@ import { getCompareFunc, getDisplayValue, stableSort } from "../../lib/helpers";
 // CONSTANTS
 import { ORDERED_COLUMNS } from "../../lib/constants";
 
-const useStyles = makeStyles((theme) => ({
+export const useStyles = makeStyles((theme) => ({
   paper: {
     marginBottom: theme.spacing(2),
     width: "100%",
@@ -46,14 +45,13 @@ const useStyles = makeStyles((theme) => ({
 /**
  * @Component
  * Main display table for transaction data
- * @param {object: {array}} data array of transaction data objects
  *
  */
-const DataTable = ({ data }) => {
+const DataTable = () => {
   const classes = useStyles();
 
   const {
-    data: { loading },
+    data: { filteredTransactions, loading },
     order: { order, orderBy },
   } = useSelector((state) => state);
 
@@ -72,31 +70,31 @@ const DataTable = ({ data }) => {
             <SortableTableHead classes={classes} />
             {!loading && (
               <TableBody>
-                {stableSort(data, getCompareFunc(order, orderBy)).map(
-                  (row, i) => (
-                    <TableRow
-                      hover
-                      key={`row-${i}`} // eslint-disable-line react/no-array-index-key
-                    >
-                      {ORDERED_COLUMNS.map((column, j) => {
-                        const value = row[column];
-                        const display = getDisplayValue(value, column);
-                        const showTooltip =
-                          display && !column.includes("amount");
-                        return (
-                          <Tooltip
-                            key={`cell-${value}-${j}`} // eslint-disable-line react/no-array-index-key
-                            title={showTooltip ? value : ""}
-                          >
-                            <TableCell component="td">
-                              {display || value}
-                            </TableCell>
-                          </Tooltip>
-                        );
-                      })}
-                    </TableRow>
-                  )
-                )}
+                {stableSort(
+                  filteredTransactions,
+                  getCompareFunc(order, orderBy)
+                ).map((row, i) => (
+                  <TableRow
+                    hover
+                    key={`row-${i}`} // eslint-disable-line react/no-array-index-key
+                  >
+                    {ORDERED_COLUMNS.map((column, j) => {
+                      const value = row[column];
+                      const display = getDisplayValue(value, column);
+                      const showTooltip = display && !column.includes("amount");
+                      return (
+                        <Tooltip
+                          key={`cell-${value}-${j}`} // eslint-disable-line react/no-array-index-key
+                          title={showTooltip ? value : ""}
+                        >
+                          <TableCell component="td">
+                            {display || value}
+                          </TableCell>
+                        </Tooltip>
+                      );
+                    })}
+                  </TableRow>
+                ))}
               </TableBody>
             )}
           </Table>
@@ -121,10 +119,6 @@ const DataTable = ({ data }) => {
       </style>
     </div>
   );
-};
-
-DataTable.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default DataTable;

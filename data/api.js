@@ -27,14 +27,18 @@ export const routes = [
   },
 ];
 
+const routeNames = routes.map((r) => r.name).join(", ");
+export const bsRouteWarning = (route) =>
+  `Invalid route key provided (${route}). Please try one of the following: ${routeNames}`;
+
 /**
  * @function
  * Constructs path for api query
  * @param {object} route one of the above routes
  *
  */
-const compileFullPath = (route) => {
-  const { endpoint } = routes.find((r) => r.name === route);
+export const compileFullPath = (route) => {
+  const { endpoint } = routes.find((r) => r.name === route) || {};
   return endpoint ? `${BASE_URL}${endpoint}` : null;
 };
 
@@ -57,10 +61,7 @@ const api = {
         return [];
       }
     } else {
-      const routeNames = routes.map((r) => r.name).join(", ");
-      console.warn(
-        `Invalid route key provided (${route}). Please try one of the following: ${routeNames}`
-      );
+      console.warn(bsRouteWarning(route));
       return [];
     }
   },
