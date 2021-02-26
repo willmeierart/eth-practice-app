@@ -36,19 +36,20 @@ const SortableTableHead = ({ classes }) => {
   return (
     <TableHead>
       <TableRow>
-        {HEAD_CELLS.map((hc) => (
+        {HEAD_CELLS.map(({ id, label }) => (
           <TableCell
             align="left"
-            key={`th-${hc.id}`}
+            aria-label={`table column ${orderBy} sorted by ${order}`}
+            key={`th-${id}`}
             padding="default"
-            sortDirection={isOrderer(hc.id) ? order : false}
+            sortDirection={isOrderer(id) ? order : false}
           >
             <TableSortLabel
-              active={isOrderer(hc.id)}
-              direction={isOrderer(hc.id) ? order : "asc"}
-              onClick={onSort(hc.id)}
+              active={isOrderer(id)}
+              direction={isOrderer(id) ? order : "asc"}
+              onClick={onSort(id)}
             >
-              {hc.label}
+              {label}
             </TableSortLabel>
           </TableCell>
         ))}

@@ -69,6 +69,7 @@ const TableToolbar = () => {
   return (
     <Toolbar className={clsx(classes.root)}>
       <Typography
+        aria-label="title"
         className={classes.title}
         component="div"
         id="tableTitle"
@@ -84,13 +85,14 @@ const TableToolbar = () => {
             </InputAdornment>
           ),
         }}
+        aria-label="searchbar"
         id="searchbar"
         onChange={handleSearch}
         value={searchPhrase}
         variant="outlined"
       />
-      <Tooltip title="Filter list">
-        <IconButton aria-label="filter list" onClick={toggleDrawer(true)}>
+      <Tooltip title="Filter transactions">
+        <IconButton aria-label="filter toggle" onClick={toggleDrawer(true)}>
           <FilterListIcon />
         </IconButton>
       </Tooltip>
@@ -101,26 +103,31 @@ const TableToolbar = () => {
               <ListItemText>Filter</ListItemText>
             </ListItem>
             <Divider />
-            {FILTERS.map((filter) => {
-              const val = filter.options.find(
-                (option) => option === activeFilters[filter.id]
+            {FILTERS.map(({ display, id, options }) => {
+              const val = options.find(
+                (option) => option === activeFilters[id]
               );
               return (
-                <ListItem key={filter.id}>
+                <ListItem key={id}>
                   <Select
+                    aria-label={`filter dropdown ${id}`}
                     displayEmpty
-                    onChange={handleFilter(filter.id)}
-                    placeholder={filter.display}
-                    renderValue={(value) => value || filter.display}
-                    value={val || filter.display}
+                    onChange={handleFilter(id)}
+                    placeholder={display}
+                    renderValue={(rVal) => rVal || display}
+                    value={val || display}
                   >
-                    <MenuItem key="delete-option" value={filter.display}>
+                    <MenuItem key="delete-option" value={display}>
                       <IconButton>
                         <DeleteIcon />
                       </IconButton>
                     </MenuItem>
-                    {filter.options.map((option) => (
-                      <MenuItem key={`${filter.id}-${option}`} value={option}>
+                    {options.map((option) => (
+                      <MenuItem
+                        aria-label={`filter ${id} option ${option}`}
+                        key={`${id}-${option}`}
+                        value={option}
+                      >
                         {option}
                       </MenuItem>
                     ))}

@@ -62,7 +62,6 @@ const DataTable = () => {
         <TableContainer>
           <Table
             aria-label="data table"
-            aria-labelledby="tableTitle"
             className={classes.table}
             size="small"
             stickyHeader
@@ -87,7 +86,10 @@ const DataTable = () => {
                           key={`cell-${value}-${j}`} // eslint-disable-line react/no-array-index-key
                           title={showTooltip ? value : ""}
                         >
-                          <TableCell component="td">
+                          <TableCell
+                            aria-label={`table column ${column} value ${value}`}
+                            component="td"
+                          >
                             {display || value}
                           </TableCell>
                         </Tooltip>
@@ -100,7 +102,7 @@ const DataTable = () => {
           </Table>
         </TableContainer>
         {loading && (
-          <div className="loading-wrapper">
+          <div aria-lable="progress loader" className="loading-wrapper">
             <CircularProgress />
           </div>
         )}
