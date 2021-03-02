@@ -1,5 +1,12 @@
 # bc-tx-project
 
+## Instructions
+
+To install modules use `yarn`
+To run a local instance of the app, you will want to run `yarn dev`.
+To run a production build, you will warn to run `yarn build` and then `yarn start`.
+Your app will be running on port 3000
+
 ## Overview
 Build a React application that uses the mocked endpoints in this repo to fetch and display all of a users transactions
 (BTC, ETH, Custodial/Fiat) in a single list with descending chronological order.
